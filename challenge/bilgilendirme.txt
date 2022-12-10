@@ -1,0 +1,42 @@
+Web'ten "Spring Initializr" üzerinden Spring projesi taslağı hazırlandı.
+Zip olarak indirilen proje zip'ten çıkarılıp Eclipse'e import/existing maven olarak dahil edildi ve açıldı.
+
+Sonra MySql üzerinden birbiriyle ilişkili Country-City tablosu oluşturuldu.
+City "country_id" foreign key'i ile Country tablosuna bağlandı.
+
+Country values olarak "country_id (int)" ve "country (varchar)" aldı
+City values olarak "city_id (int)", "city (varchar)" ve "country_id (int-foreign)" aldı
+
+Tablolar oluşturulduktan sonra kodlama olarak planlanması Entity-DataAccess-Business-RestApi olarak planlandı.
+
+Sonra proje açılıp Entity katmanı için "Entities" package oluşturulup içine tablolarımıza ait class'lar eklendi.
+Entity'de bulunan class'ların birer "Entity" olduğu belirtmek için "@Entity" anotasyonu eklendi ve tabloyla ilişkilendirmek için de "@Table(name = "<tabloAdı>")" anotasyonu verildi.
+Entity class'ların içine her tablonun value'leri eklendi.
+Örnek olarak : City : private int city_id, private String city, private int country_id
+Bu değişkenlerin hepsinin tabloda bir kolon adına denk geldiğini belirtmek için "@Column" anotasyonu verildi.
+Bu değişkenlerden tabloda "primary key" görevi gören değişkene diğer değişkenlerden farklı olarak "@Id" ve "@GeneratedValue(strategy = GenerationType.IDENTITY)" anotasyonu verildi
+
+Sonra her Entity class'ında bir boş Constructor, bir de bütün değişkenleri kapsayan ikinci bir Constructor oluşturuldu.
+Her değişkene ait get-set metodları da eklendi ve Entity'ler tamamlanmış oldu.
+
+Sonra DataAccess package oluşturuldu ve içine her class'a ait bir Interface ve Dal (DataAccess Layer) class'ı oluşturuldu.
+
+DataAccess/Interface'leri klasik CRUD işlemlerini tanımlayabilmek için add, update, delete, getAll metodlarını yazdık ve sadece id'sini verip çekmek için de getById() metodu oluşturduk.
+Burada DataAccess/Interface oluşturmamızın nedeni hem class'lara ınterface üzerinden erişmek nesne oluşturmadan hem de bağımlılığı azaltmak.
+Yarın öbür gün insert ya da delete gibi işlemler olduğunda direk interface üzerinden işlemleri gerçekleştirmek.
+
+Oluşturduğumuz DataAccess'teki Interface'leri ilgili Dal'larla ilişkilendirmek için implement ettik.
+İlgili Entity class'ımıza erişmek için EntityManager(javax.persistence üzerinden gelir) üzerinden nesne oluşturduk ve bu oluşturduğumuz nesneyi CRUD işlemlerinde Session'larda kullandık
+
+Sonra Business katmanına geldik ve burada da Interface-Manager ilişkisi kurduk.
+Interface'ler DataAccess'teki metodları içerdi (CRUD) ve bu interface'leri de implement ettik Manager'lara.
+Manager'lardan DataAcces'teki somut class'lara erişmek için DataAccess'teki var olan ınterface'lerden nesne oluşturduk ve bu nesneler aracılığıyla somut class'lardaki metodları döndürdük.
+
+En son görüntülemek için de RestApi katmanı oluşturduk ve her tablo için bir Controller oluşturduk. Bu class'ların birer Controller olduğunu belirtmek için de "@RestController" anotasyonu verdik ve localhost:8080'de çalışırken hangi url'yi yazınca geleceğini belirtmek için de "@RequestMapping("/urlName")" yazdık Controller'ın en üstüne.
+Controller'dan Business katmanına erişmek için de Business içinde bulunan interface'ten nesne oluşturduk ve bu nesne aracılığıyla metodlara eriştik.
+
+Tabloların içindeki nesnelerin hepsini getirmek için "@GetMapping("/urlName")" anotasyonunu kullanırken işlem yapabilmek için de "@PostMapping("/urlName")" anotasyonunu kullandık ve bu anotasyon sayesinde PostMan üzerinde CRUD işlemlerimizi yapabileceğiz.
+Eğer ki id üzerinden bir değer döndürmek istiyorsak da "@RequestMapping" anotasyonunu kullanırız.
+
+Postman üzerinde yapılan işlemler "Images" klasöründe bulunmaktadır. 
+
